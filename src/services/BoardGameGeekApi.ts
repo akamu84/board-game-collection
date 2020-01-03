@@ -1,4 +1,5 @@
 import xmljs from "xml-js";
+import { ICollection, IGame } from "../models/index";
 
 export async function getCollectionAsync(
   userName: string
@@ -10,10 +11,12 @@ export async function getCollectionAsync(
   return convertToJson(data, userName);
 }
 
+// Call fetch with retry
 async function callBatchedEndpointAsync(url: string): Promise<any> {
   let response = new Response();
   try {
     response = await fetch(url);
+    // If response code was 202 then the request was queued and needs to be called again
     if (response.status === 202) {
       await sleep(500);
       response = await callBatchedEndpointAsync(url);
@@ -32,10 +35,13 @@ async function callBatchedEndpointAsync(url: string): Promise<any> {
   }
 }
 
+// Convert XML response to typed object
 function convertToJson(data: any, userName: string): ICollection {
+  // Convert XML to JSON
   let source: any = JSON.parse(
     xmljs.xml2json(data, { compact: true, spaces: 4, ignoreDeclaration: true })
   );
+
   let converted: ICollection = {} as ICollection;
   let items = [];
 
@@ -49,6 +55,7 @@ function convertToJson(data: any, userName: string): ICollection {
     converted.totalItems = source.items._attributes.totalitems;
     converted.owner = userName;
 
+    // Convert default JSON to typed object
     items = source.items.item.map(function(element: any) {
       let convertedItem: IGame = {} as IGame;
       convertedItem.id = element._attributes.objectid;
@@ -74,29 +81,7 @@ function convertToJson(data: any, userName: string): ICollection {
   return converted;
 }
 
+// Sleep for x milleseconds
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export interface IGame {
-  id: number;
-  type: string;
-  name: string;
-  published: number;
-  image: string;
-  thumbnail: string;
-  stats: {
-    minPlayers: number;
-    maxPlayers: number;
-    playingTime: number;
-  };
-  rating: number;
-}
-
-export interface ICollection {
-  hasError: boolean;
-  error: string;
-  totalItems: number;
-  owner: string;
-  games: IGame[];
 }

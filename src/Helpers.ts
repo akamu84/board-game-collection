@@ -1,4 +1,4 @@
-import { ICollection, IGame } from "./api/BoardGameGeekApi";
+import { ICollection, IGame, IMergedGame } from "./models/index";
 
 export function mergeCollections(collections: ICollection[]): IMergedGame[] {
   let games = [] as IMergedGame[];
@@ -41,20 +41,4 @@ function convertGameToMergedGame(owner: string, game: IGame): IMergedGame {
 // Round to one decimal
 function roundRating(rating: number): number {
   return Math.round(rating * 10) / 10;
-}
-
-export interface IMergedGame {
-  id: number;
-  type: string;
-  name: string;
-  published: number;
-  image: string;
-  thumbnail: string;
-  stats: {
-    minPlayers: number;
-    maxPlayers: number;
-    playingTime: number;
-  };
-  rating: number;
-  owners: string[];
 }
