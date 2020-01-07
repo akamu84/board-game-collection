@@ -1,22 +1,24 @@
-import React from "react";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Grid from "@material-ui/core/Grid";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
-export interface OwnerListProps {
-  owners: string[];
-}
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     ownerInfo: {
-      marginTop: ".5rem"
-    }
-  })
+      marginTop: '.5rem',
+    },
+  }),
 );
 
-const OwnerList: React.FC<OwnerListProps> = ({ owners }) => {
+interface OwnerListProps {
+  owners: string[];
+  removeOwner?: (owner: string) => void;
+}
+
+const OwnerList: React.FC<OwnerListProps> = ({ owners, removeOwner }) => {
   const classes = useStyles();
 
   return (
@@ -27,14 +29,24 @@ const OwnerList: React.FC<OwnerListProps> = ({ owners }) => {
       spacing={1}
       className={classes.ownerInfo}
     >
-      {owners.map(owner => (
+      {owners.map((owner) => (
         <Grid item key={owner}>
-          <Chip
-            size="small"
-            color="primary"
-            icon={<AccountCircle />}
-            label={owner}
-          />
+          {removeOwner ? (
+            <Chip
+              size="small"
+              color="primary"
+              icon={<AccountCircle />}
+              label={owner}
+              onDelete={(e) => removeOwner(owner)}
+            />
+          ) : (
+            <Chip
+              size="small"
+              color="primary"
+              icon={<AccountCircle />}
+              label={owner}
+            />
+          )}
         </Grid>
       ))}
     </Grid>

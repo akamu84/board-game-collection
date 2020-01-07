@@ -1,14 +1,14 @@
-import React from "react";
-import GameDetail from "./GameDetail";
-import { IMergedGame } from "../../models/index";
+import GameDetail from './GameDetail';
+import { IMergedGame } from '../../models/index';
+import React from 'react';
 
-export interface GameListProps {
+interface GameListProps {
   collection: IMergedGame[];
 }
 
 const GameList: React.FC<GameListProps> = ({ collection }) => (
   <div>
-    {collection.map(game => (
+    {collection.map((game) => (
       <GameDetail key={game.id} game={game} />
     ))}
   </div>

@@ -1,24 +1,25 @@
-import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import StarsIcon from "@material-ui/icons/Stars";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
-export interface GameRatingProps {
-  rating: number;
-}
+import Grid from '@material-ui/core/Grid';
+import React from 'react';
+import StarsIcon from '@material-ui/icons/Stars';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     text: {
-      display: "flex",
-      alignItems: "center"
+      display: 'flex',
+      alignItems: 'center',
     },
     icon: {
-      marginLeft: ".5rem"
-    }
-  })
+      marginLeft: '.5rem',
+    },
+  }),
 );
+
+interface GameRatingProps {
+  rating: number;
+}
 
 const GameRating: React.FC<GameRatingProps> = ({ rating }) => {
   const classes = useStyles();
@@ -29,7 +30,7 @@ const GameRating: React.FC<GameRatingProps> = ({ rating }) => {
         {rating.toString().length === 1 ? `${rating}.0` : rating}
         <StarsIcon
           fontSize="small"
-          style={{ color: "gold" }}
+          style={{ color: 'gold' }}
           className={classes.icon}
         />
       </Typography>

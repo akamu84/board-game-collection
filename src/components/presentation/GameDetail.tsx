@@ -1,28 +1,29 @@
-import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { IMergedGame } from "../../models/index";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import OwnerList from "./OwnerList";
-import GameInfo from "./GameInfo";
-import GameRating from "./GameRating";
-import GameImage from "./GameImage";
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+
+import GameImage from './GameImage';
+import GameInfo from './GameInfo';
+import GameRating from './GameRating';
+import Grid from '@material-ui/core/Grid';
+import { IMergedGame } from '../../models/index';
+import OwnerList from './OwnerList';
+import Paper from '@material-ui/core/Paper';
+import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     paper: {
       padding: theme.spacing(2),
-      margin: "auto",
-      marginBottom: ".5rem",
-      maxWidth: 500
-    }
-  })
+      margin: 'auto',
+      marginBottom: '.5rem',
+      maxWidth: 500,
+    },
+  }),
 );
 
-export interface GameDetailProps {
+interface GameDetailProps {
   game: IMergedGame;
 }
 

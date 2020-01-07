@@ -1,26 +1,27 @@
-import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import WatchLaterIcon from "@material-ui/icons/WatchLater";
-import PeopleIcon from "@material-ui/icons/People";
-import Grid from "@material-ui/core/Grid";
-import { IMergedGame } from "../../models";
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
-export interface GameInfoProps {
-  game: IMergedGame;
-}
+import Grid from '@material-ui/core/Grid';
+import { IMergedGame } from '../../models';
+import PeopleIcon from '@material-ui/icons/People';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     text: {
-      display: "flex",
-      alignItems: "center"
+      display: 'flex',
+      alignItems: 'center',
     },
     icon: {
-      marginLeft: ".5rem"
-    }
-  })
+      marginLeft: '.5rem',
+    },
+  }),
 );
+
+interface GameInfoProps {
+  game: IMergedGame;
+}
 
 const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
   const classes = useStyles();
@@ -33,7 +34,7 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
         </Typography>
         <Typography variant="body2" gutterBottom className={classes.text}>
           {game.stats.playingTime}
-          {"m"}
+          {'m'}
           <WatchLaterIcon fontSize="small" className={classes.icon} />
         </Typography>
         <Typography variant="body2" gutterBottom className={classes.text}>

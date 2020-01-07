@@ -1,26 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { ICollection, IMergedGame } from './models/index';
+import React, { useEffect, useState } from 'react';
 
-import { getCollectionAsync } from "./services/BoardGameGeekApi";
-import { mergeCollections } from "./Helpers";
-import { ICollection, IMergedGame } from "./models/index";
-import GameList from "./components/presentation/GameList";
-import AddUserForm from "./components/presentation/AddOwnerForm";
-import OwnerList from "./components/presentation/OwnerList";
-import FilterPanel from "./components/presentation/FilterPanel";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import Fab from "@material-ui/core/Fab";
-import { Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import AddOwnerForm from './components/presentation/AddOwnerForm';
+import FilterPanel from './components/presentation/FilterPanel';
+import GameList from './components/presentation/GameList';
+import { Grid } from '@material-ui/core';
+import OwnerList from './components/presentation/OwnerList';
+import { getCollectionAsync } from './services/BoardGameGeekApi';
+import { makeStyles } from '@material-ui/core/styles';
+import { mergeCollections } from './Helpers';
 
 const useStyles = makeStyles({
-  fab: {
-    margin: "0px",
-    top: "auto",
-    right: "20px",
-    bottom: "20px",
-    left: "auto",
-    position: "fixed"
-  }
+  gameList: {
+    marginBottom: '3rem',
+  },
 });
 
 const App: React.FC = () => {
@@ -29,64 +22,72 @@ const App: React.FC = () => {
   const [collections, setCollections] = useState<ICollection[]>([]);
   const [masterCollection, setMasterCollection] = useState<IMergedGame[]>([]);
   const [owners, setOwners] = useState<string[]>([]);
-  const [open, setOpen] = useState<boolean>(true);
 
   useEffect(() => {
-    let existingOwners = JSON.parse(localStorage.getItem("owners") as string);
+    let existingOwners = JSON.parse(localStorage.getItem('owners') as string);
     existingOwners.forEach((existingOwner: string) => {
-      updateCollections(existingOwner);
+      addOwner(existingOwner);
     });
   });
 
   useEffect(() => {
+    console.log(collections);
     setMasterCollection(mergeCollections(collections));
   }, [collections]);
 
   useEffect(() => {
-    localStorage.setItem("owners", JSON.stringify(owners));
+    localStorage.setItem('owners', JSON.stringify(owners));
   }, [owners]);
 
-  const updateCollections = async (owner: string) => {
+  const addOwner = async (owner: string) => {
     if (!collectionExists(owner)) {
       const collection = await getCollectionAsync(owner);
 
       if (collection.hasError) {
         showError(collection.error);
       } else {
-        setCollections(collections => [...collections, collection]);
+        setCollections((collections) => [...collections, collection]);
 
         if (!ownerExists(owner)) {
-          setOwners(owners => [...owners, owner]);
+          setOwners((owners) => [...owners, owner]);
         }
       }
     }
   };
 
+  const removeOwner = (owner: string) => {
+    let filteredOwners = owners.filter(
+      (existingOwner) => existingOwner !== owner,
+    );
+    localStorage.setItem('owners', JSON.stringify(filteredOwners));
+    setOwners(filteredOwners);
+    setCollections(
+      collections.filter((collection) => collection.owner !== owner),
+    );
+  };
+
   const collectionExists = (owner: string): boolean =>
-    collections.some(collection => collection.owner === owner);
+    collections.some((collection) => collection.owner === owner);
 
   const ownerExists = (owner: string): boolean =>
-    owners.some(existingOwner => existingOwner === owner);
+    owners.some((existingOwner) => existingOwner === owner);
 
   const showError = (error: string) => alert(error);
 
   return (
     <React.Fragment>
-      <Grid container direction="column" alignItems="center">
-        <Grid item>
-          <AddUserForm updateCollections={updateCollections} />
+      <Grid container direction="column" alignItems="center" spacing={1}>
+        <Grid item xs={12}>
+          <AddOwnerForm addOwner={addOwner} />
         </Grid>
         <Grid item xs={12}>
-          <OwnerList owners={owners} />
+          <OwnerList owners={owners} removeOwner={removeOwner} />
         </Grid>
-        <Grid item>
+        <Grid item xs={12} className={classes.gameList}>
           <GameList collection={masterCollection} />
         </Grid>
+        <FilterPanel />
       </Grid>
-      <Fab className={classes.fab} onClick={() => setOpen(true)}>
-        <FilterListIcon />
-      </Fab>
-      <FilterPanel open={open} setOpen={setOpen} />
     </React.Fragment>
   );
 };
