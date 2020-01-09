@@ -1,4 +1,4 @@
-import { Button, Slider } from '@material-ui/core';
+import { Button, Fab, Popover, Slider } from '@material-ui/core';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,15 +17,18 @@ import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      position: 'fixed',
-      bottom: 0,
-    },
     list: {
       width: '500px',
     },
     listItem: {
       marginTop: '1.5rem',
+    },
+    fab: {
+      top: 'auto',
+      right: '20px',
+      bottom: '20px',
+      left: 'auto',
+      position: 'fixed',
     },
   }),
 );
@@ -44,6 +47,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   const [players, setPlayers] = React.useState<number[]>([0, 100]);
   const [rating, setRating] = React.useState<number[]>([0, 10]);
   const [playTime, setPlayTime] = React.useState<number[]>([0, 240]);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
 
   const valuetext = (value: number) => {
     return `${value}`;
@@ -94,17 +100,43 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     setMasterCollection(collection);
   };
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(event.currentTarget);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
-    <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="filter-panel-content"
-          id="filter-panel-header"
-        >
+    <div>
+      <Fab
+        className={classes.fab}
+        aria-describedby="filter-panel"
+        color="primary"
+        onClick={handleClick}
+      >
+        Filter
+      </Fab>
+      <Popover
+        id="filter-panel"
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+      >
+        <div>
           <Typography>Filter</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
           <List className={classes.list}>
             <ListItem className={classes.listItem}>
               <ListItemIcon>
@@ -152,8 +184,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               <Button onClick={clearFilters}>Clear</Button>
             </ListItem>
           </List>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </div>
+      </Popover>
     </div>
   );
 };

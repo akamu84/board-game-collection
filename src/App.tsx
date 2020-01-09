@@ -87,11 +87,11 @@ const App: React.FC = () => {
         <Grid item xs={12} className={classes.gameList}>
           <GameList collection={masterCollection} />
         </Grid>
-        <FilterPanel
-          masterCollection={masterCollection}
-          setMasterCollection={setMasterCollection}
-        />
       </Grid>
+      <FilterPanel
+        masterCollection={masterCollection}
+        setMasterCollection={setMasterCollection}
+      />
     </React.Fragment>
   );
 };
