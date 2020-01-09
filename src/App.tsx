@@ -25,13 +25,14 @@ const App: React.FC = () => {
 
   useEffect(() => {
     let existingOwners = JSON.parse(localStorage.getItem('owners') as string);
-    existingOwners.forEach((existingOwner: string) => {
-      addOwner(existingOwner);
-    });
+    if (existingOwners) {
+      existingOwners.forEach((existingOwner: string) => {
+        addOwner(existingOwner);
+      });
+    }
   });
 
   useEffect(() => {
-    console.log(collections);
     setMasterCollection(mergeCollections(collections));
   }, [collections]);
 
@@ -86,7 +87,10 @@ const App: React.FC = () => {
         <Grid item xs={12} className={classes.gameList}>
           <GameList collection={masterCollection} />
         </Grid>
-        <FilterPanel />
+        <FilterPanel
+          masterCollection={masterCollection}
+          setMasterCollection={setMasterCollection}
+        />
       </Grid>
     </React.Fragment>
   );

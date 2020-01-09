@@ -1,5 +1,6 @@
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
+import { Divider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { IMergedGame } from '../../models';
 import PeopleIcon from '@material-ui/icons/People';
@@ -12,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       display: 'flex',
       alignItems: 'center',
+      marginTop: '1rem',
     },
     icon: {
       marginLeft: '.5rem',
@@ -32,6 +34,7 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
         <Typography gutterBottom variant="h6">
           {game.name}
         </Typography>
+        <Divider />
         <Typography variant="body2" gutterBottom className={classes.text}>
           {game.stats.playingTime}
           {'m'}

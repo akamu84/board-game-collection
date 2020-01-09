@@ -34,5 +34,6 @@ export interface IMergedGame {
     playingTime: number;
   };
   rating: number;
+  filtered: boolean;
   owners: string[];
 }

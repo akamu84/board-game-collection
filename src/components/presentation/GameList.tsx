@@ -8,9 +8,11 @@ interface GameListProps {
 
 const GameList: React.FC<GameListProps> = ({ collection }) => (
   <div>
-    {collection.map((game) => (
-      <GameDetail key={game.id} game={game} />
-    ))}
+    {collection
+      .filter((game) => !game.filtered)
+      .map((game) => (
+        <GameDetail key={game.id} game={game} />
+      ))}
   </div>
 );
 
